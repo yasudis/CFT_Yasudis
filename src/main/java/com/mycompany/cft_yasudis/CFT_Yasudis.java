@@ -20,17 +20,18 @@ import java.util.Scanner;
  * @author jasudis
  */
 public class CFT_Yasudis {
-    String a="notes3.txt";
-    String b="notes4.txt";
-    String[]comandsConsole;
+ 
+    String[]comandsConsole;//чтение команды
+    
     BufferedWriter resultFile;
-    String[] countFile=new String[]{"notes3.txt","notes4.txt","notes5.txt"};
-    int count;
+
     boolean whatIsType=true; //true-строка, false-число
     boolean whatIsSort=true;//true-возрастание, false-убывание
-    boolean hasReaultFile=true;
+    boolean hasResultFile=true;
+    
     ArrayList<BufferedReader> listFile=new ArrayList<BufferedReader>();
     ArrayList<String> listLine=new ArrayList<String>();
+    int count;
     
     String fileSeparator = System.getProperty("file.separator");
     
@@ -90,34 +91,22 @@ public class CFT_Yasudis {
             //throw new IOException("Error: file write error!");
         }
     }
-    
-       // if (resultFile.exists()!=true){
-       //     resultFile=new File("result.txt");
-        //    resultFile.createNewFile();
-       //     System.out.println("нету файла, создаётся новый файл result.txt");
-         
-        
-    
-        
-        
-        
-    
+   
     private void createListFile(int k) throws FileNotFoundException, IOException{
         count=0;
         for (int i=(k+1);i<comandsConsole.length;i++){
      
-    try{ listFile.add(new BufferedReader(new FileReader(comandsConsole[i])));
+            try{ listFile.add(new BufferedReader(new FileReader(comandsConsole[i])));
     
-        listLine.add((listFile.get(count)).readLine());
+                    listLine.add((listFile.get(count)).readLine());
         
-        }
-        catch(IOException ex){
-        listFile.add(null);
-        listLine.add(null);
+            }
+            catch(IOException ex){
+                listFile.add(null);
+                listLine.add(null);
                    }
             count++;
-    }
-  
+        }  
     }
     private void sortLineFile() throws FileNotFoundException, IOException{
        
@@ -125,7 +114,7 @@ public class CFT_Yasudis {
                 System.out.println((listLine));
         int i=0;
         while (checkNullEltvtnts()!=true) {
-            int value=CompareTwoElements ();
+            int value=CompareElements ();
             result.add(listLine.get(value));
             resultFile.write((listLine.get(value)));
             resultFile.newLine();
@@ -144,8 +133,8 @@ public class CFT_Yasudis {
         }
         
     }
-    private int CompareTwoElements (){
-        whatIsType=true;
+    private int CompareElements (){
+        
         String maxNumber=null;
         int maxIndex=0;
         for (int k=0;k<listLine.size();k++){
@@ -154,23 +143,42 @@ public class CFT_Yasudis {
                  maxIndex=k;
              }
          }
-        if (whatIsType){
+        
             for (int i=0;i<listLine.size();i++){
-            if (listLine.get(i)!=null)
-            if(maxNumber.length() >= listLine.get(i).length()){
-                maxNumber = listLine.get(i);
-                maxIndex = i;
-                }
-        }           
-        }
+                if (listLine.get(i)!=null){
+                    if (CompareElement(maxNumber,listLine.get(i))){
+                        maxNumber = listLine.get(i);
+                        maxIndex = i;
+                    }
+                }    
+            }            
         return maxIndex;
-       // else {
-        //   if(Integer.parseInt(firstElement) < Integer.parseInt(secondElement))
-        //   {}
-        //    else 
-         //  {}
-       // }
-    } 
+    }
+    private boolean CompareElement(String first,String second){
+      
+        if (whatIsSort){
+            if(ConvertElement(first) >= ConvertElement(second)){
+              return true;
+            }
+          else 
+              return false;
+        } 
+        else {
+            if(ConvertElement(first) <= ConvertElement(second)){
+              return true;
+            }
+            else 
+              return false;
+        }
+    }
+    private int ConvertElement(String element){
+        
+        if (whatIsType)
+            return element.length();
+        else 
+            return Integer.parseInt(element);
+    }
+        
     private boolean checkNullEltvtnts(){
         boolean result=true;
         for (int k=0;k<listLine.size();k++){
