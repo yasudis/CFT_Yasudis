@@ -98,7 +98,7 @@ public class CFT_Yasudis {
      
             try{ listFile.add(new BufferedReader(new FileReader(comandsConsole[i])));
     
-                    listLine.add((listFile.get(count)).readLine());
+                    listLine.add(CheckRelevantElement(count));
         
             }
             catch(IOException ex){
@@ -118,15 +118,14 @@ public class CFT_Yasudis {
             result.add(listLine.get(value));
             resultFile.write((listLine.get(value)));
             resultFile.newLine();
-            listLine.set(value,(listFile.get(value)).readLine());
+            listLine.set(value,(CheckRelevantElement(value)));
             System.out.println((listLine));
             i++;
         }
          System.out.println((result));
          resultFile.close();
-         ClosedFile();         
-         
-   }
+         ClosedFile();           
+    }
     private void ClosedFile() throws IOException{
         for (int i=0;i<count;i++){
         listFile.get(i).close();
@@ -186,6 +185,46 @@ public class CFT_Yasudis {
                result=false; 
              }
         }
+        return result;
+    }
+    
+    private String CheckRelevantElement(int i) throws IOException{
+        
+        String element= (listFile.get(i)).readLine();
+        
+        boolean relevant=false;
+        
+        while (relevant!=true){
+           // System.out.println(" CheckRelevantElement");
+            if (CheckRelevant(element))
+                relevant=true;
+            else
+                element= (listFile.get(i)).readLine();  
+        }
+        return element;
+    }
+    private boolean CheckRelevant(String element){
+        
+        boolean result=true;
+        if (element!=null){
+            if (whatIsType){
+                if (element.contains(" ")){
+                    System.out.println("строка имеет пробелы- элемент не корректный");
+                    result=false;
+                }        
+            }
+            else{
+                try {
+                    Integer.parseInt(element);
+                    result= true;
+                } 
+                catch (NumberFormatException e) {
+                    result= false;
+                    System.out.println("строка не являеться числом- элеиент некорктный");
+            }
+        }
+        }
+        //System.out.println(" CheckRelevant");
         return result;
     }
     public static void main(String[] args) throws IOException {
