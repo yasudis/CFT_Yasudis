@@ -72,14 +72,29 @@ public class CFT_Yasudis {
         }
         if (hasFirstComand){
             switch(comandsConsole[1]){
-            case "-s" -> whatIsType=true;
-            case "-i" -> whatIsType=false;
-            default -> {
+                case "-s" -> whatIsType=true;
+                case "-i" -> whatIsType=false;
+                default -> {
                 whatIsType=true;
                 System.out.println("Неправильная вторая команда сортировки, сортировка будет настроена для символов");
-             }                
+                }                   
             }
         }
+        else {
+            switch(comandsConsole[1]){
+                case "-a" -> {
+                    whatIsSort=true;
+                    System.out.println("Неправильный порядок команд");
+                    i=2;
+             }
+                case "-d" -> {
+                    whatIsSort=false;
+                    System.out.println("Неправильный порядок команд");
+                    i=2;              
+                }
+            }
+                    }
+        
        
        createListFile(i);
         try{ resultFile=new BufferedWriter(new FileWriter((comandsConsole[i])));
@@ -128,7 +143,8 @@ public class CFT_Yasudis {
     }
     private void ClosedFile() throws IOException{
         for (int i=0;i<count;i++){
-        listFile.get(i).close();
+            if ( listFile.get(i)!=null)
+            listFile.get(i).close();
         }
         
     }
@@ -231,7 +247,6 @@ public class CFT_Yasudis {
      CFT_Yasudis doit=new CFT_Yasudis();
      
      doit.readComandOnConsole();
-     doit.sortLineFile();
-     
+     doit.sortLineFile();     
     }
 }
