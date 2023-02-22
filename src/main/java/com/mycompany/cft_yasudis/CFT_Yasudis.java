@@ -5,23 +5,22 @@
 package com.mycompany.cft_yasudis;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 
 /**
  *
- * @author jasudis
+ * @author Yasudis
  */
 public class CFT_Yasudis {
  
-    String[]comandsConsole;//чтение команды
+    String[] comandsConsole;//чтение команды
     
     BufferedWriter resultFile;
 
@@ -36,10 +35,24 @@ public class CFT_Yasudis {
     String fileSeparator = System.getProperty("file.separator");
     
     private void readComandOnConsole() throws IOException{
-     Scanner in=new Scanner(System.in);
-     boolean hasFirstComand=true;
-     int i;//место выходного файла
-        comandsConsole=in.nextLine().split(" ");
+        Scanner in=new Scanner(System.in);
+        boolean hasFirstComand=true;
+        listFile=new ArrayList<BufferedReader>();
+        listLine=new ArrayList<String>();
+        count=0;
+        int i;//место выходного файла
+        String[] readComand= in.nextLine().split(" ");
+        //if (readComand==""){
+       //     System.out.println("пусая строка, комадну выполнить невозможно- повторите попытку.");
+       //     readComandOnConsole();
+       // }
+        comandsConsole=GetComandInStringArray(readComand);
+                //in.nextLine().split(" ");
+        System.out.println((comandsConsole));       
+        if ((CheckNullComand())==false){
+            System.out.println("пусая строка, комадну выполнить невозможно- выход из программы.");
+            System.exit(0);
+        }
         switch (comandsConsole[0]) {
             case "-a":
                 whatIsSort=true;
@@ -94,8 +107,7 @@ public class CFT_Yasudis {
                 }
             }
                     }
-        
-       
+             
        createListFile(i);
         try{ resultFile=new BufferedWriter(new FileWriter((comandsConsole[i])));
        }
@@ -105,8 +117,21 @@ public class CFT_Yasudis {
             System.out.println("нету файла, создаётся новый файл result.txt");
             //throw new IOException("Error: file write error!");
         }
+        sortLineFile();  
     }
-   
+    private String[] GetComandInStringArray (String[] input){
+        
+        Set<String> out= new HashSet<>();
+        ArrayList<String> result= new ArrayList<String>();
+        for (int i=0;i<input.length;i++){
+            out.add(input[i]);
+        }
+        for (var i:out){
+            result.add(i);
+        }
+        
+        return result.toArray(new String[result.size()]);
+    }
     private void createListFile(int k) throws FileNotFoundException, IOException{
         count=0;
         for (int i=(k+1);i<comandsConsole.length;i++){
@@ -121,8 +146,36 @@ public class CFT_Yasudis {
                 listLine.add(null);
                    }
             count++;
-        }  
+        }
+        if (CheckRelevantFile()==false){
+        System.out.println("файлы пустые, сортировка невозможна");
+        readComandOnConsole();
+        
+        }
     }
+    private boolean CheckRelevantFile(){
+    boolean result=false;
+    for (int i=0;i<count;i++){
+        if (listLine.get(i)!=null){
+            result=true;
+        }
+    }
+    return result;
+    }
+    private boolean CheckNullComand(){
+        boolean result=false;
+        
+        for (int i=0;i<comandsConsole.length;i++){
+            if (comandsConsole[i]!=null){
+                result=true;
+            }
+        }
+        if (comandsConsole.length<3)
+            result=false;
+        
+        return result;
+    }
+    
     private void sortLineFile() throws FileNotFoundException, IOException{
        
         ArrayList<String> result=new ArrayList<String>();
@@ -247,6 +300,6 @@ public class CFT_Yasudis {
      CFT_Yasudis doit=new CFT_Yasudis();
      
      doit.readComandOnConsole();
-     doit.sortLineFile();     
+        
     }
 }
