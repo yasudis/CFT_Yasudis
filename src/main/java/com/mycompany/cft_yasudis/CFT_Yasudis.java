@@ -9,12 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+
+
 
 /**
  *
@@ -33,10 +32,12 @@ public class CFT_Yasudis {
     ArrayList<BufferedReader> listFile = new ArrayList<BufferedReader>();
     ArrayList<String> listLine = new ArrayList<String>();
     int count;
+    String beforResalt=" ";
+    String afteResalt;
 
     String fileSeparator = System.getProperty("file.separator");
 
-    private void readComandOnConsole() throws IOException {
+    private void ReadComandOnConsole() throws IOException {
         Scanner in = new Scanner(System.in);
         boolean hasFirstComand = true;
         listFile = new ArrayList<BufferedReader>();
@@ -53,7 +54,7 @@ public class CFT_Yasudis {
         System.out.println(Arrays.toString(comandsConsole));
         //in.nextLine().split(" ");
         if ((CheckNullComand()) == false) {
-            System.out.println("пусая строка, комадну выполнить невозможно- выход из программы.");
+            System.out.println("ошибка ввода команды, выполнить невозможно- выход из программы.");
             System.exit(0);
         }
         switch (comandsConsole[0]) {
@@ -81,9 +82,9 @@ public class CFT_Yasudis {
                 break;
             default:
                 whatIsSort = true;
-                hasFirstComand = false;
-                i = 1;
-                System.out.println("Неправильная первая команда сортировки, сортировка будет настроена по возрастанию");
+                hasFirstComand = true;
+                i = 2;
+                System.out.println("Неправильная первая команда сортировки, сортировка будет сделана по возрастанию");
                 break;
         }
         if (hasFirstComand) {
@@ -94,7 +95,7 @@ public class CFT_Yasudis {
                     whatIsType = false;
                 default -> {
                     whatIsType = true;
-                    System.out.println("Неправильная вторая команда сортировки, сортировка будет настроена для символов");
+                    System.out.println("Неправильная вторая команда сортировки, сортировка будет сделана для символов");
                 }
             }
         } else {
@@ -112,43 +113,38 @@ public class CFT_Yasudis {
             }
         }
 
-        createListFile(i);
+        CreateListFile(i);
         try {
             resultFile = new BufferedWriter(new FileWriter((comandsConsole[i])));
         } catch (IOException e) {
             //Ошибка: ошибка записи!
             resultFile = new BufferedWriter(new FileWriter(("result.txt")));
             System.out.println("нету файла, создаётся новый файл result.txt");
-            //throw new IOException("Error: file write error!");
+
         }
-        sortLineFile();
+        SortLineFile();
     }
 
     private String[] GetComandInStringArray(String[] input) {
-
        Set<String> out = new LinkedHashSet();
         ArrayList<String> result = new ArrayList<String>();
         for (int i = 0; i < input.length; i++) {
             out.add(input[i]);
         }
-      // out.add(input);
         System.out.println(out);
         for (var z : out) {
             result.add(z);
         }
-        //result=out.toArray();
         return result.toArray(new String[result.size()]);
     }
 
-    private void createListFile(int k) throws FileNotFoundException, IOException {
+    private void CreateListFile(int k) throws FileNotFoundException, IOException {
         count = 0;
         for (int i = (k + 1); i < comandsConsole.length; i++) {
-
             try {
                 listFile.add(new BufferedReader(new FileReader(comandsConsole[i])));
 
                 listLine.add(CheckRelevantElement(count));
-
             } catch (IOException ex) {
                 listFile.add(null);
                 listLine.add(null);
@@ -156,9 +152,8 @@ public class CFT_Yasudis {
             count++;
         }
         if (CheckRelevantFile() == false) {
-            System.out.println("файлы пустые, сортировка невозможна-закрытие программы");
+            System.out.println("неккоректные файлы, сортировка невозможна-закрытие программы");
             System.exit(0);
-
         }
     }
 
@@ -174,7 +169,6 @@ public class CFT_Yasudis {
 
     private boolean CheckNullComand() {
         boolean result = false;
-
         for (int i = 0; i < comandsConsole.length; i++) {
             if (comandsConsole[i] != null) {
                 result = true;
@@ -183,21 +177,22 @@ public class CFT_Yasudis {
         if (comandsConsole.length < 3) {
             result = false;
         }
-
         return result;
     }
 
-    private void sortLineFile() throws FileNotFoundException, IOException {
+    private void SortLineFile() throws FileNotFoundException, IOException {
 
         ArrayList<String> result = new ArrayList<String>();
         System.out.println((listLine));
         int i = 0;
-        while (checkNullEltvtnts() != true) {
+        while (CheckNullEltvtnts() != true) {
             int value = CompareElements();
             result.add(listLine.get(value));
+            beforResalt=listLine.get(value);
             resultFile.write((listLine.get(value)));
             resultFile.newLine();
-            listLine.set(value, (CheckRelevantElement(value)));
+            listLine.set(value, (CheckRelevantElement(value)));            
+            //beforResalt=afteResalt;
             System.out.println((listLine));
             i++;
         }
@@ -212,7 +207,6 @@ public class CFT_Yasudis {
                 listFile.get(i).close();
             }
         }
-
     }
 
     private int CompareElements() {
@@ -252,18 +246,19 @@ public class CFT_Yasudis {
                 return false;
             }
         }
+        
     }
 
     private int ConvertElement(String element) {
-
-        if (whatIsType) {
+       if (whatIsType) {
             return element.length();
-        } else {
+        }             
+        else {
             return Integer.parseInt(element);
-        }
+        }   
     }
 
-    private boolean checkNullEltvtnts() {
+    private boolean CheckNullEltvtnts() {
         boolean result = true;
         for (int k = 0; k < listLine.size(); k++) {
             if (listLine.get(k) != null) {
@@ -274,39 +269,73 @@ public class CFT_Yasudis {
     }
 
     private String CheckRelevantElement(int i) throws IOException {
-        String element = (listFile.get(i)).readLine();
+        String element = (listFile.get(i)).readLine();    
         boolean relevant = false;
         while (relevant != true) {
-            // System.out.println(" CheckRelevantElement");
+            // System.out.println(" CheckRelevantElement");            
             if (CheckRelevant(element)) {
                 relevant = true;
             } else {
-                element = (listFile.get(i)).readLine();
+                element = (listFile.get(i)).readLine();          
             }
+            
         }
-        return element;
+     
+        try{return element.trim();}
+        catch (Exception e){
+        return element;}
     }
 
     private boolean CheckRelevant(String element) {
 
         boolean result = true;
+
         if (element != null) {
+            element=element.trim();
             if (whatIsType) {
-                if (element.contains(" ")) {
+                if (element.contains(" ")||(element.isEmpty())) {
                     System.out.println("строка имеет пробелы- элемент некорректный");
                     result = false;
                 }
-            } else {
+                else{
+                    if (CompareElement(element,beforResalt)==false){
+                        System.out.println("Сортировка в файле нарушина-элемент не подходит сортировке");
+                        result = false;
+                    }
+                }
+            } 
+            else {
                 try {
-                    Integer.parseInt(element);
+                    Integer.valueOf(element);
                     result = true;
+                    if (whatIsSort){
+                        if (beforResalt!=" "){
+                        if (Integer.valueOf(element)>=Integer.valueOf(beforResalt)){
+                            result = true;
+                            }
+                        else {
+                            System.out.println("Сортировка в файле нарушина-элемент не подходит сортировке");
+                            result=false;
+                        }
+                        }
+                    }
+                    else {
+                        if (beforResalt!=" "){
+                        if (Integer.valueOf(element)<=Integer.valueOf(beforResalt)){
+                            result = true;
+                            }
+                        else {
+                            System.out.println("Сортировка в файле нарушина-элемент не подходит сортировке");
+                            result=false;
+                        }
+                        }
+                    }   
                 } catch (NumberFormatException e) {
                     result = false;
                     System.out.println("строка не являеться числом- элемент некорректный");
-                }
-            }
+                }                            
+            }       
         }
-        //System.out.println(" CheckRelevant");
         return result;
     }
 
@@ -314,10 +343,10 @@ public class CFT_Yasudis {
         CFT_Yasudis doit = new CFT_Yasudis();
 
         try {
-            doit.readComandOnConsole();
+            doit.ReadComandOnConsole();
+            System.out.println("Программа завершена.");
         } catch (IOException e) {
             System.out.println("Что-то пошло не так- завершение программы");
         }
-
     }
 }
