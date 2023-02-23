@@ -49,9 +49,9 @@ public class CFT_Yasudis {
         //     System.out.println("пусая строка, комадну выполнить невозможно- повторите попытку.");
         //     readComandOnConsole();
         // }
-        System.out.println(Arrays.toString(readComand));
+       // System.out.println(Arrays.toString(readComand));
         comandsConsole = GetComandInStringArray(readComand);
-        System.out.println(Arrays.toString(comandsConsole));
+        //System.out.println(Arrays.toString(comandsConsole));
         //in.nextLine().split(" ");
         if ((CheckNullComand()) == false) {
             System.out.println("ошибка ввода команды, выполнить невозможно- выход из программы.");
@@ -115,10 +115,10 @@ public class CFT_Yasudis {
 
         CreateListFile(i);
         try {
-            resultFile = new BufferedWriter(new FileWriter((comandsConsole[i])));
+            resultFile = new BufferedWriter(new FileWriter(("D:\\test\\"+comandsConsole[i])));
         } catch (IOException e) {
             //Ошибка: ошибка записи!
-            resultFile = new BufferedWriter(new FileWriter(("result.txt")));
+            resultFile = new BufferedWriter(new FileWriter(("D:\\test\\result.txt")));
             System.out.println("нету файла, создаётся новый файл result.txt");
 
         }
@@ -142,7 +142,7 @@ public class CFT_Yasudis {
         count = 0;
         for (int i = (k + 1); i < comandsConsole.length; i++) {
             try {
-                listFile.add(new BufferedReader(new FileReader(comandsConsole[i])));
+                listFile.add(new BufferedReader(new FileReader("D:\\test\\" +comandsConsole[i])));
 
                 listLine.add(CheckRelevantElement(count));
             } catch (IOException ex) {
@@ -182,12 +182,12 @@ public class CFT_Yasudis {
 
     private void SortLineFile() throws FileNotFoundException, IOException {
 
-        ArrayList<String> result = new ArrayList<String>();
+       // ArrayList<String> result = new ArrayList<String>();
         System.out.println((listLine));
         int i = 0;
         while (CheckNullEltvtnts() != true) {
             int value = CompareElements();
-            result.add(listLine.get(value));
+            //result.add(listLine.get(value));
             beforResalt=listLine.get(value);
             resultFile.write((listLine.get(value)));
             resultFile.newLine();
@@ -196,7 +196,7 @@ public class CFT_Yasudis {
             System.out.println((listLine));
             i++;
         }
-        System.out.println((result));
+        //System.out.println((result));
         resultFile.close();
         ClosedFile();
     }
