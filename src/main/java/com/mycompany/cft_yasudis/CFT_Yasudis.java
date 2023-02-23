@@ -37,14 +37,15 @@ public class CFT_Yasudis {
 
     String fileSeparator = System.getProperty("file.separator");
 
-    private void ReadComandOnConsole() throws IOException {
-        Scanner in = new Scanner(System.in);
+    private void ReadComandOnConsole(String[] args ) throws IOException {
+        //Scanner in = new Scanner(System.in);
         boolean hasFirstComand = true;
         listFile = new ArrayList<BufferedReader>();
         listLine = new ArrayList<String>();
         count = 0;
         int i;//место выходного файла
-        String[] readComand = in.nextLine().split(" ");
+        //String[] readComand = in.nextLine().split(" ");
+        String[] readComand=args;
         //if (readComand==""){
         //     System.out.println("пусая строка, комадну выполнить невозможно- повторите попытку.");
         //     readComandOnConsole();
@@ -131,7 +132,7 @@ public class CFT_Yasudis {
         for (int i = 0; i < input.length; i++) {
             out.add(input[i]);
         }
-        System.out.println(out);
+        //System.out.println(out);
         for (var z : out) {
             result.add(z);
         }
@@ -343,7 +344,7 @@ public class CFT_Yasudis {
         CFT_Yasudis doit = new CFT_Yasudis();
 
         try {
-            doit.ReadComandOnConsole();
+            doit.ReadComandOnConsole(args);
             System.out.println("Программа завершена.");
         } catch (IOException e) {
             System.out.println("Что-то пошло не так- завершение программы");
